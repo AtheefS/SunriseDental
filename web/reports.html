@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports - Sunrise Dental Clinic</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="page-container">
+
+        <div class="card">
+
+            <h1>Sunrise Dental Clinic</h1>
+
+            <p class="subtitle">
+                Appointment & Patient Management System
+            </p>
+
+            <h2>Reports</h2>
+
+
+            <!-- DAILY APPOINTMENT REPORT -->
+
+            <div class="report-section">
+
+                <h3>Daily Appointment Report</h3>
+
+                <label for="reportDate">
+                    Select Date
+                </label>
+
+                <input
+                    type="date"
+                    id="reportDate"
+                >
+
+                <button onclick="loadDailyReport()">
+                    Generate Daily Report
+                </button>
+
+                <div id="dailyReport"></div>
+
+            </div>
+
+
+            <!-- BILLING REPORT -->
+
+            <div class="report-section">
+
+                <h3>Billing & Revenue Report</h3>
+
+                <button onclick="loadBillingReport()">
+                    Generate Billing Report
+                </button>
+
+                <div id="billingReport"></div>
+
+            </div>
+
+
+            <button onclick="window.location.href='dashboard.html'">
+                Back to Dashboard
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const API_URL = "http://localhost:8080";
+
+
+        // ==========================================
+        // DAILY APPOINTMENT REPORT
+        // ==========================================
+
+        async function loadDailyReport() {
+
+            const date =
+                document.getElementById("reportDate").value;
+
+            const result =
+                document.getElementById("dailyReport");
+
+            if (!date) {
+
+                result.innerHTML =
+                    "<p>Please select a date.</p>";
+
+                return;
+            }
+
+            result.innerHTML =
+                "<p>Loading report...</p>";
+
+            try {
+
+                const response = await fetch(
+                    API_URL +
+                    "/api/reports/daily?date=" +
+                    encodeURIComponent(date)
+                );
+
+                const data =
+                    await response.json();
+
+                if (!data.success) {
+
+                    result.innerHTML =
+                        "<p>" +
+                        (data.message || "No report available.") +
+                        "</p>";
+
+                    return;
+                }
+
+                if (!data.appointments ||
+                    data.appointments.length === 0) {
+
+                    result.innerHTML =
+                        "<p>No appointments found for this date.</p>";
+
+                    return;
+                }
+
+
+                let html = `
+                    <h4>Appointments for ${date}</h4>
+
+                    <table class="report-table">
+
+                        <tr>
+                            <th>Appointment No.</th>
+                            <th>Patient</th>
+                            <th>Dentist</th>
+                            <th>Treatment</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                `;
+
+
+                data.appointments.forEach(function (appointment) {
+
+                    html += `
+                        <tr>
+                            <td>${appointment.appointmentNumber}</td>
+                            <td>${appointment.patientName}</td>
+                            <td>${appointment.dentistName}</td>
+                            <td>${appointment.treatmentName}</td>
+                            <td>${appointment.appointmentTime}</td>
+                            <td>${appointment.status}</td>
+                        </tr>
+                    `;
+
+                });
+
+
+                html += "</table>";
+
+                result.innerHTML = html;
+
+            } catch (error) {
+
+                console.error(error);
+
+                result.innerHTML =
+                    "<p>Unable to connect to Java server.</p>";
+            }
+        }
+
+
+        // ==========================================
+        // BILLING REPORT
+        // ==========================================
+
+        async function loadBillingReport() {
+
+            const result =
+                document.getElementById("billingReport");
+
+            result.innerHTML =
+                "<p>Loading billing report...</p>";
+
+            try {
+
+                const response = await fetch(
+                    API_URL + "/api/reports/billing"
+                );
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    result.innerHTML =
+                        "<p>" +
+                        (data.message ||
+                         "Unable to generate billing report.") +
+                        "</p>";
+
+                    return;
+                }
+
+
+                result.innerHTML = `
+
+                    <div class="billing-summary">
+
+                        <h4>Billing & Revenue Summary</h4>
+
+                        <p>
+                            <strong>Total Bills:</strong>
+                            ${data.totalBills}
+                        </p>
+
+                        <p>
+                            <strong>Total Revenue:</strong>
+                            Rs. ${Number(data.totalRevenue).toFixed(2)}
+                        </p>
+
+                    </div>
+
+                `;
+
+            } catch (error) {
+
+                console.error(error);
+
+                result.innerHTML =
+                    "<p>Unable to connect to Java server.</p>";
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

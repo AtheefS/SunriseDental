@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Search Appointment - Sunrise Dental</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <div class="dashboard-card">
+
+            <h1>Search Appointment</h1>
+
+            <p class="subtitle">
+                Sunrise Dental Clinic
+            </p>
+
+            <label for="appointmentNumber">
+                Appointment Number
+            </label>
+
+            <input
+                type="text"
+                id="appointmentNumber"
+                placeholder="Enter appointment number"
+            >
+
+            <button onclick="searchAppointment()">
+                Search Appointment
+            </button>
+
+            <div id="result"></div>
+
+            <button onclick="goDashboard()">
+                Back to Dashboard
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const API = "http://localhost:8080";
+
+        async function searchAppointment() {
+
+            const number =
+                document.getElementById("appointmentNumber")
+                .value.trim();
+
+            const result =
+                document.getElementById("result");
+
+            if (!number) {
+
+                result.innerHTML =
+                    "<p>Please enter an appointment number.</p>";
+
+                return;
+            }
+
+            try {
+
+                const response =
+                    await fetch(
+                        API +
+                        "/api/appointments?number=" +
+                        encodeURIComponent(number)
+                    );
+
+                const data =
+                    await response.json();
+
+                if (!data.success) {
+
+                    result.innerHTML =
+                        "<p>" +
+                        (data.message || "Appointment not found.") +
+                        "</p>";
+
+                    return;
+                }
+
+                result.innerHTML = `
+                    <div class="appointment-result">
+
+                        <h2>Appointment Details</h2>
+
+                        <p><strong>Appointment Number:</strong>
+                        ${data.appointmentNumber}</p>
+
+                        <p><strong>Patient Name:</strong>
+                        ${data.patientName}</p>
+
+                        <p><strong>Address:</strong>
+                        ${data.address}</p>
+
+                        <p><strong>Contact Number:</strong>
+                        ${data.contactNumber}</p>
+
+                        <p><strong>Dentist:</strong>
+                        ${data.dentistName}</p>
+
+                        <p><strong>Treatment:</strong>
+                        ${data.treatmentName}</p>
+
+                        <p><strong>Date:</strong>
+                        ${data.appointmentDate}</p>
+
+                        <p><strong>Time:</strong>
+                        ${data.appointmentTime}</p>
+
+                        <p><strong>Status:</strong>
+                        ${data.status}</p>
+
+                    </div>
+                `;
+
+            } catch (error) {
+
+                console.error(error);
+
+                result.innerHTML =
+                    "<p>Unable to connect to the Java server.</p>";
+            }
+        }
+
+        function goDashboard() {
+
+            window.location.href =
+                "dashboard.html";
+        }
+
+    </script>
+
+</body>
+
+</html>

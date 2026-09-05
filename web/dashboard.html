@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Sunrise Dental Clinic</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <div class="dashboard-card">
+
+            <h1>Sunrise Dental Clinic</h1>
+
+            <p class="subtitle">
+                Appointment & Patient Management System
+            </p>
+
+            <h2>Dashboard</h2>
+
+            <p>
+                Welcome, <strong id="username"></strong>
+            </p>
+
+            <div class="dashboard-buttons">
+
+                <button onclick="openAppointment()">
+                    Register New Appointment
+                </button>
+
+                <button onclick="openSearch()">
+                    Search Appointment
+                </button>
+
+                <button onclick="openBill()">
+                    Calculate & Print Bill
+                </button>
+
+                <button onclick="openHelp()">
+                    Help
+                </button>
+                <button onclick="window.location.href='reports.html'">
+                 Reports
+                </button>
+
+                <button onclick="logout()">
+                    Logout
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const username = sessionStorage.getItem("username");
+
+        if (!username) {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById("username").textContent = username;
+
+        function openAppointment() {
+            window.location.href = "appointment.html";
+        }
+
+        function openSearch() {
+            window.location.href = "search.html";
+        }
+
+        function openBill() {
+            window.location.href = "bill.html";
+        }
+
+        function openHelp() {
+            window.location.href = "help.html";
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        }
+
+    </script>
+
+</body>
+
+</html>
