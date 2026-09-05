@@ -10,4 +10,4 @@ RUN mkdir -p out && javac -cp "lib/mysql-connector-j-26.7.0.jar" -d out $(find s
 
 EXPOSE 8080
 
-CMD ["java", "-cp", "out:lib/mysql-connector-j-26.7.0.jar", "Main"]
+CMD ["java", "-cp", "out:lib/mysql-connector-j-26.7.0.jar", "com.sunrise.web.HttpServer"]
