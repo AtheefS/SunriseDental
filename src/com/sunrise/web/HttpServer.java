@@ -23,9 +23,13 @@ public class HttpServer {
 
     public static void main(String[] args) throws Exception {
 
-        com.sun.net.httpserver.HttpServer server =
-                com.sun.net.httpserver.HttpServer.create(
-                        new InetSocketAddress(8080), 0);
+           int port = Integer.parseInt(
+             System.getenv().getOrDefault("PORT", "8080")
+        );
+
+             com.sun.net.httpserver.HttpServer server =
+               com.sun.net.httpserver.HttpServer.create(
+                 new InetSocketAddress(port), 0);
 
         // ==============================
         // TEST API

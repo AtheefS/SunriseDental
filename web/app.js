@@ -29,7 +29,7 @@ if (loginForm) {
         try {
 
             const response = await fetch(
-                "http://localhost:8080/api/login",
+                "/api/login",
                 {
                     method: "POST",
                     headers: {
@@ -120,7 +120,7 @@ if (billForm) {
             // -------------------------------------------------
 
             const appointmentResponse = await fetch(
-                "http://localhost:8080/api/appointments?number="
+                "/api/appointments?number="
                 + encodeURIComponent(appointmentNumber)
             );
 
@@ -165,7 +165,7 @@ if (billForm) {
                 "Calculating bill...";
 
             const billResponse = await fetch(
-                "http://localhost:8080/api/bills",
+                "/api/bills",
                 {
                     method: "POST",
                     headers: {
